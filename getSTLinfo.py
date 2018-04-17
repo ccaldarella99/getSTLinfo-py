@@ -107,6 +107,14 @@ stlTransFile.write(header.txn)
 perLineFile.write(header.txn)
 
 
+#Temporary Variables
+auth = 0
+adjust = 0
+credit = 0
+void = 0
+declines = 0
+
+
 #REGEX
 re_filename = re.compile('^((\d{8}\.*\d{0,3})\.(\w+))$', re.IGNORECASE)
 
@@ -114,8 +122,28 @@ re_filename = re.compile('^((\d{8}\.*\d{0,3})\.(\w+))$', re.IGNORECASE)
 for file in file_names:
 	#Parse Settlement files
 	if os.path.exists(file):
-		if(re_filename.match(file)):
-			print(file)
+		is_stl = re.match(re_filename, file)
+		if(is_stl):
+			fullname = is_stl.group(1)
+			dob = is_stl.group(2)
+			ext = is_stl.group(3)
+			
+			list = open(file, 'r')
+			for line in list:
+				
+				if("AUTHORIZE" in line):
+					auth += 1
+				elif("ADJUST" in line):
+					adjust += 1
+				elif("CREDIT" in line):
+					credit += 1
+				elif("DELETE" in line):
+					void += 1
+				elif("APPROVED\s+NO" in line):
+					declines += 1
+#					print("DECLINE: " + line)
+				
+			list.close()
 
 
 

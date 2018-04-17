@@ -1,0 +1,70 @@
+; Settlement File D:\AlohaEDC\EDC\\NOVA\20180416.002.STL
+;
+; FULL SETTLEMENT
+
+; Date: 04/16/2018
+; Time: 10:56:35
+;
+; Auth: 477
+; Info: 
+;
+
+BEGIN
+    TYPE       AUTHORIZE
+    DOB        20180324
+    DATE       20180324
+    TIME       22:03:35
+    TERMINAL   2
+    EMPLOYEE   201  Cashier 201
+    TABLE      #108
+    CHECK      20001
+    PAYMENT    20001
+    AUTHAMT    590.7
+    BATCHAMT   492.25
+    BATCHTIP   98.45
+    CARDTYPE   VISA
+    CARDMASK   XXXXXXXXXXXX5493
+    {3FzZ3T7ePkJlkpLoRZV/j92iGv+++Tht09uM3HCnXA4FTjakadiX5Q98i61h3IZO}
+    EXP        1122
+    CVVRES      
+    REF        15530476
+    AUTH       00173D
+    ERROR      ServerDown
+    INFO       _|_|N388106606057719P4DXD|59070|513222|416165005|20180416105005|_|000|AA||||0|2|||
+    STANDALONE YES
+    PINDEX     1
+    APPROVEAMT 590.7
+    TID        0
+    LOGTIME    22:03:35
+    FOHFEATS   10000000000000000000000000000000
+    TERMCAPS   00000000000000000000000000000000
+    FOHVERSION 6.7.70.6390
+    ACTIONCODE 000
+    APPROVED   YES
+    FILENO     67
+    PROCNO     8
+    LANG       1033
+    TENDER_NUM 16
+    AVSRES      
+    CRCY       840
+    REVID      2
+    REVNAME    Truck
+END
+
+BEGIN
+    TYPE       SETTLE
+    DOB        20180416
+    DATE       20180416
+    TIME       10:56:32
+    TERMINAL   Back office
+    MANAGER    5610
+    REF        90815015
+    AUTH       477
+    PINDEX     1
+    PROCESSOR  NOVA
+    APPROVED   YES
+    FILENO     10000000
+    PROCNO     8
+    LANG       1033
+END
+
