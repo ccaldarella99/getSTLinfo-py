@@ -64,19 +64,16 @@ class Trans:
 		self.info = list_of_args[20]
 		self.auth_num = list_of_args[21]
 	
-	def set_type(self, type):
-		self.type = type
-	
-	def get_txn(self):
+	def set_txn(self):
 		self.txn = self.type + "," + self.dob + "," + self.date + "," + self.time + "," + self.emp + "," + self.table + "," + self.check + "," + self.amt + "," + self.bam + "," + self.tip + "," + self.card + "," + self.mask + "," + self.exp + "," + self.appr + "," + self.auth + "," + self.error + "," + self.filename + "," + self.filetype + "," + self.ref + ","
 
 
 
 header = Trans("NUM", "TYPE", "DOB", "DATE", "TIME", "EMPLOYEE", "TABLE", "CHECK", "AUTHAMT", "BATCHAMT", "BATCHTIP", "CARDTYPE", "CARDMASK", "EXP", "APPROVED", "AUTH", "ERROR", "FILENAME", "FILETYPE", "REF", "", "", "")
 
-header.get_txn()
+header.set_txn()
 
-
+#print(header.txn)
 
 
 
