@@ -107,6 +107,10 @@ stlTransFile.write(header.txn)
 perLineFile.write(header.txn)
 
 
+#BOOLEAN Variables
+open = false
+decl = false
+
 #Temporary Variables
 auth = 0
 adjust = 0
@@ -142,7 +146,14 @@ for file in file_names:
 				elif("APPROVED\s+NO" in line):
 					declines += 1
 #					print("DECLINE: " + line)
-				
+			
+			if("BEGIN" in line)
+				open = true
+			elif("APPROVED" in line)
+				decl = true
+			elif("END" in line)
+				print("add to Queue and reset Vars")
+			
 			list.close()
 
 
