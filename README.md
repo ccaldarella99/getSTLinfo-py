@@ -4,4 +4,4 @@ Put Python-file in a folder with Settlement Markers and it parses the data into 
 
 -A work in progress as I translate my Ruby version to Python
 
-Created by (Christopher Caldarella)[https://github.com/ccaldarella99/]
+Created by [Christopher Caldarella](https://github.com/ccaldarella99/)
