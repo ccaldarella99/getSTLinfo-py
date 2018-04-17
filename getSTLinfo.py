@@ -1,5 +1,9 @@
+#! python3
+# getSTLinfo.py - parse STL files and generate CSV files from them
+
 import glob
 import os
+import re
 
 #List Files in this folder
 cwd = os.getcwd()
@@ -85,28 +89,47 @@ class Trans:
 		self.txn = self.type + "," + self.dob + "," + self.date + "," + self.time + "," + self.emp + "," + self.table + "," + self.check + "," + self.amt + "," + self.bam + "," + self.tip + "," + self.card + "," + self.mask + "," + self.exp + "," + self.appr + "," + self.auth + "," + self.error + "," + self.filename + "," + self.filetype + "," + self.ref + ","
 
 
-
+#Setup Header for Files
 header = Trans("NUM", "TYPE", "DOB", "DATE", "TIME", "EMPLOYEE", "TABLE", "CHECK", "AUTHAMT", "BATCHAMT", "BATCHTIP", "CARDTYPE", "CARDMASK", "EXP", "APPROVED", "AUTH", "ERROR", "FILENAME", "FILETYPE", "REF", "", "", "")
-
 header.set_txn()
-
 #print(header.txn)
 
 
-
-
-
-
-
-
+#Create generic reporting files and add Header
 decTransFile = open(dirname + "\\DECLINES-all.csv", 'w')
 stlTransFile = open(dirname + "\\SETTLEMENTS-all.csv", 'w')
 allTransFile = open(dirname + "\\STL-DEC-all.csv", 'w')
 perLineFile = open(dirname + "\\data-all.csv", 'w')
+crunchAll = open(dirname + "\\cards-ALL.csv", 'w')
 allTransFile.write(header.txn)
 decTransFile.write(header.txn)
 stlTransFile.write(header.txn)
 perLineFile.write(header.txn)
+
+
+#REGEX
+re_filename = re.compile('^((\d{8}\.*\d{0,3})\.(\w+))$', re.IGNORECASE)
+
+#Go through list of Files
+for file in file_names:
+	#Parse Settlement files
+	if os.path.exists(file):
+		if(re_filename.match(file)):
+			print(file)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
