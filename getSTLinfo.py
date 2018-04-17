@@ -1,12 +1,29 @@
 import glob
 import os
 
+#List Files in this folder
 cwd = os.getcwd()
+file_names = []
 files = glob.glob(cwd + "\\*.*")
-
 for i in range(len(files)):
 	x = files[i].split("\\")
-	print(x[len(x) - 1])
+	file_names.append(x[len(x) - 1])
+
+#Print List of File Names
+#for file in file_names:
+#	print(file)
+
+#create Directories for CSV files
+dirname = "stl-csv"
+if not os.path.isdir(dirname):
+	os.makedirs(dirname)
+declines_name = dirname + "\\DECLINES"
+if not os.path.isdir(declines_name):
+	os.makedirs(declines_name)
+stl_name = dirname + "\\SETTLEMENTS"
+if not os.path.isdir(stl_name):
+	os.makedirs(stl_name)
+
 
 
 
@@ -82,7 +99,14 @@ header.set_txn()
 
 
 
-
+decTransFile = open(dirname + "\\DECLINES-all.csv", 'w')
+stlTransFile = open(dirname + "\\SETTLEMENTS-all.csv", 'w')
+allTransFile = open(dirname + "\\STL-DEC-all.csv", 'w')
+perLineFile = open(dirname + "\\data-all.csv", 'w')
+allTransFile.write(header.txn)
+decTransFile.write(header.txn)
+stlTransFile.write(header.txn)
+perLineFile.write(header.txn)
 
 
 
