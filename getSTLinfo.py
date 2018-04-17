@@ -130,7 +130,11 @@ for file in file_names:
 
 
 
-
-
+#Close Files
+decTransFile.close()
+stlTransFile.close()
+allTransFile.close()
+perLineFile.close()
+crunchAll.close()
 
 
