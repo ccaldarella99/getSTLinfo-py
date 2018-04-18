@@ -108,8 +108,8 @@ perLineFile.write(header.txn)
 
 
 #BOOLEAN Variables
-open = false
-decl = false
+open_txn = False
+decl_txn = False
 
 #Temporary Variables
 auth = 0
@@ -117,6 +117,7 @@ adjust = 0
 credit = 0
 void = 0
 declines = 0
+stl = 0
 
 
 #REGEX
@@ -147,12 +148,14 @@ for file in file_names:
 					declines += 1
 #					print("DECLINE: " + line)
 			
-			if("BEGIN" in line)
-				open = true
-			elif("APPROVED" in line)
-				decl = true
-			elif("END" in line)
-				print("add to Queue and reset Vars")
+				if("BEGIN" in line):
+					open_txn = True
+				elif("APPROVED" in line):
+					decl_txn = True
+				elif("END" in line):
+					decl_txn = False
+					open_txn = False
+					print("add to Queue and reset Vars")
 			
 			list.close()
 
@@ -177,3 +180,4 @@ perLineFile.close()
 crunchAll.close()
 
 
+os.system("pause")
