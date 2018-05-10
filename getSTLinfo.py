@@ -88,40 +88,120 @@ class Trans:
 	def set_txn(self):
 		self.txn = self.type + "," + self.dob + "," + self.date + "," + self.time + "," + self.emp + "," + self.table + "," + self.check + "," + self.amt + "," + self.bam + "," + self.tip + "," + self.card + "," + self.mask + "," + self.exp + "," + self.appr + "," + self.auth + "," + self.error + "," + self.filename + "," + self.filetype + "," + self.ref + ","
 
+class Settlement_File:
+	#BOOLEAN Variables
+	open_txn = False
+	decl_txn = False
 
-#Setup Header for Files
+	#Temporary Variables
+	auth = 0
+	adjust = 0
+	credit = 0
+	void = 0
+	declines = 0
+	stl = 0
+
+	#strings
+	fullname = ""
+	dob = ""
+	ext = ""
+	
+	def __init__(self):
+		#BOOLEAN Variables
+		self.open_txn = False
+		self.decl_txn = False
+
+		#Temporary Variables
+		self.auth = 0
+		self.adjust = 0
+		self.credit = 0
+		self.void = 0
+		self.declines = 0
+		self.stl = 0
+
+		#strings
+		self.fullname = ""
+		self.dob = ""
+		self.ext = ""
+	
+#	def __del__(self):
+#		self.init_trans_vars()
+#		self.init_file_vars()
+	
+	def init_trans_vars(self):
+		#BOOLEAN Variables
+		open_txn = False
+		decl_txn = False
+		
+	def init_file_vars(self):
+		#Temporary Variables
+		auth = 0
+		adjust = 0
+		credit = 0
+		void = 0
+		declines = 0
+		stl = 0
+		
+		#strings
+		fullname = ""
+		dob = ""
+		ext = ""
+
+	def p_summary(self):
+		print(self.fullname)
+		print("Auths: " + str(self.auth))
+		print("Adjusts: " + str(self.adjust))
+		print("Credits: " + str(self.credit))
+		print("Voids: " + str(self.void))
+		print("Declines: " + str(self.declines))
+		print("\n\n")
+
+
+#Setup Trans Header for Files
 header = Trans("NUM", "TYPE", "DOB", "DATE", "TIME", "EMPLOYEE", "TABLE", "CHECK", "AUTHAMT", "BATCHAMT", "BATCHTIP", "CARDTYPE", "CARDMASK", "EXP", "APPROVED", "AUTH", "ERROR", "FILENAME", "FILETYPE", "REF", "", "", "")
 header.set_txn()
-#print(header.txn)
+
+f = Settlement_File()
 
 
-#Create generic reporting files and add Header
+#Create and open generic reporting files
 decTransFile = open(dirname + "\\DECLINES-all.csv", 'w')
 stlTransFile = open(dirname + "\\SETTLEMENTS-all.csv", 'w')
 allTransFile = open(dirname + "\\STL-DEC-all.csv", 'w')
 perLineFile = open(dirname + "\\data-all.csv", 'w')
 crunchAll = open(dirname + "\\cards-ALL.csv", 'w')
+#add Headers to files
 allTransFile.write(header.txn)
 decTransFile.write(header.txn)
 stlTransFile.write(header.txn)
 perLineFile.write(header.txn)
 
 
-#BOOLEAN Variables
-open_txn = False
-decl_txn = False
-
-#Temporary Variables
-auth = 0
-adjust = 0
-credit = 0
-void = 0
-declines = 0
-stl = 0
-
-
-#REGEX
+#REGEXES
 re_filename = re.compile('^((\d{8}\.*\d{0,3})\.(\w+))$', re.IGNORECASE)
+re_auth = re.compile('\s*TYPE\s*AUTHORIZE', re.IGNORECASE)
+re_adjust = re.compile('\s*TYPE\s*ADJUST', re.IGNORECASE)
+re_credit = re.compile('\s*TYPE\s*CREDIT', re.IGNORECASE)
+re_void = re.compile('\s*TYPE\s*VOID', re.IGNORECASE)
+re_decline = re.compile('\s*APPROVED\s*NO', re.IGNORECASE)
+re_type = re.compile('/^\s+TYPE\s+(.+)$//', re.IGNORECASE)
+re_dob = re.compile('/^\s+DOB\s+(.+)$//', re.IGNORECASE)
+re_date = re.compile('/^\s+DATE\s+(.+)$//', re.IGNORECASE)
+re_time = re.compile('/^\s+TIME\s+(.+)$//', re.IGNORECASE)
+re_emp = re.compile('/^\s+EMPLOYEE\s+(.+)$//', re.IGNORECASE)
+re_table = re.compile('/^\s+TABLE\s+(.+)$//', re.IGNORECASE)
+re_check = re.compile('/^\s+CHECK\s+(.+)$//', re.IGNORECASE)
+re_amt = re.compile('/^\s+AUTHAMT\s+(.+)$//', re.IGNORECASE)
+re_bat = re.compile('/^\s+BATCHAMT\s+(.+)$//', re.IGNORECASE)
+re_tip = re.compile('/^\s+BATCHTIP\s+(.+)$//', re.IGNORECASE)
+re_card = re.compile('/^\s+CARDTYPE\s+(.+)$//', re.IGNORECASE)
+re_mask = re.compile('/^\s+CARDMASK\s+X+(.+)$//', re.IGNORECASE)
+re_exp = re.compile('/^\s+EXP\s+(.+)$//', re.IGNORECASE)
+re_ref = re.compile('/^\s+REF\s+(.+)$//', re.IGNORECASE)
+re_authnum = re.compile('/^\s+AUTH\s+(.+)$//', re.IGNORECASE)
+re_appr = re.compile('/^\s+APPROVED\s+(.+)$//', re.IGNORECASE)
+re_error = re.compile('/^\s+ERROR\s+(.+)$//', re.IGNORECASE)
+re_info = re.compile('/^\s+INFO\s+(.+)$//', re.IGNORECASE)
 
 #Go through list of Files
 for file in file_names:
@@ -129,39 +209,95 @@ for file in file_names:
 	if os.path.exists(file):
 		is_stl = re.match(re_filename, file)
 		if(is_stl):
-			fullname = is_stl.group(1)
-			dob = is_stl.group(2)
-			ext = is_stl.group(3)
+			f.fullname = is_stl.group(1)
+			f.dob = is_stl.group(2)
+			f.ext = is_stl.group(3)
 			
 			list = open(file, 'r')
 			for line in list:
 				
-				if("AUTHORIZE" in line):
-					auth += 1
-				elif("ADJUST" in line):
-					adjust += 1
-				elif("CREDIT" in line):
-					credit += 1
-				elif("DELETE" in line):
-					void += 1
-				elif("APPROVED\s+NO" in line):
-					declines += 1
+				if(re.match(re_auth, line)):
+					f.auth += 1
+				elif(re.match(re_adjust, line)):
+					f.adjust += 1
+				elif(re.match(re_credit, line)):
+					f.credit += 1
+				elif(re.match(re_void, line)):
+					f.void += 1
+				elif(re.match(re_decline, line)):
+					f.declines += 1
 #					print("DECLINE: " + line)
 			
 				if("BEGIN" in line):
-					open_txn = True
+					f.open_txn = True
 				elif("APPROVED" in line):
-					decl_txn = True
+					f.decl_txn = True
 				elif("END" in line):
-					decl_txn = False
-					open_txn = False
-					print("add to Queue and reset Vars")
+					f.init_trans_vars()
+#					print("add to Queue and reset Vars")
+			
+				if(f.open_txn == True):
+					m_type = re.match(re_type, line)
+					m_dob = re.match(re_dob, line)
+					m_date = re.match(re_date, line)
+					m_time = re.match(re_time, line)
+					m_emp = re.match(re_emp, line)
+					m_table = re.match(re_table, line)
+					m_check = re.match(re_check, line)
+					m_amt = re.match(re_amt, line)
+					m_bat = re.match(re_bat, line)
+					m_tip = re.match(re_tip, line)
+					m_card = re.match(re_card, line)
+					m_mask = re.match(re_mask, line)
+					m_exp = re.match(re_exp, line)
+					m_ref = re.match(re_ref, line)
+					m_authnum = re.match(re_authnum, line)
+					m_appr = re.match(re_appr, line)
+					m_error = re.match(re_error, line)
+					m_info = re.match(re_info, line)
+					
+					if(m_type):
+						tran = m_type.group(1)
+					elif(m_dob):
+						dobT = m_dob.group(1)
+					elif(m_date):
+						dateT = m_date.group(1)
+					elif(m_time):
+						time = m_time.group(1)
+					elif(m_emp):
+						emp = m_emp.group(1)
+					elif(m_table):
+						table = m_table.group(1)
+						#if(table.include? ','):
+						#	table.sub!(',','')
+					elif(m_check):
+						check = m_check.group(1)
+					elif(m_amt):
+						amt = m_amt.group(1)
+					elif(m_bat):
+						bam = m_bat.group(1)
+					elif(m_tip):
+						tip = m_tip.group(1)
+					elif(m_card):
+						card = m_card.group(1)
+					elif(m_mask):
+						mask = m_mask.group(1)
+					elif(m_exp):
+						exp = m_exp.group(1)
+					elif(m_ref):
+						ref = m_ref.group(1)
+					elif(m_authnum):
+						authorize = m_authnum.group(1)
+					elif(m_appr):
+						appr = m_appr.group(1)
+					elif(m_error):
+						error = m_error.group(1)
+					elif(m_info):
+						info = m_info.group(1)
 			
 			list.close()
-
-
-
-
+			f.p_summary()
+			f = Settlement_File()
 
 
 
